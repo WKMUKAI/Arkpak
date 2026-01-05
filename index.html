@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ARK_PAK_ | CUSTOM ARCHIVAL HOUSING</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initPlaces" async defer></script>
+
+  <style>
+    :root { --g: #00a651; --b: #111; --w: #fff; --y: #ffed00; --grey: #f9f9f9; --err: #ff4444; }
+    * { box-sizing: border-box; font-family: 'Quicksand', sans-serif; outline: none; }
+    body { margin: 0; background: var(--w); color: var(--b); line-height: 1.6; padding-bottom: 50px; }
+    
+    /* UTILS */
+    .hidden { display: none !important; }
+    .fade-in { animation: fadeIn 0.3s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* HEADER */
+    .promo-bar { background: var(--y); text-align: center; padding: 10px; font-weight: 800; letter-spacing: 1px; font-size: 14px; }
+    nav { padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; position: sticky; top: 0; background: var(--w); z-index: 100; }
+    .logo { font-weight: 700; font-size: 1.4rem; letter-spacing: -1px; }
+    .logo span { color: var(--g); }
+    .phase-badge { background: var(--g); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+
+    /* HERO */
+    .hero { text-align: center; padding: 40px 20px; }
+    .hero h2 { margin: 0 0 10px; font-size: 1.8rem; line-height: 1.2; }
+    .hero-visual {
+      max-width: 600px; height: 200px; margin: 20px auto; border-radius: 30px; overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: #eee;
+      display: flex; align-items: center; justify-content: center; color: #aaa;
+    }
+
+    /* TRUST BADGES */
+    .trust-line { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 900px; margin: 0 auto 40px auto; padding: 0 20px; text-align: center; font-size: 11px; }
+    .trust-line b { display: block; font-weight: 700; margin-top: 4px; color: var(--g); }
+
+    /* FORM CARD */
+    .config-card { max-width: 700px; margin: 0 auto; background: var(--grey); border-radius: 30px; padding: 30px; border: 2px solid #f0f0f0; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+    h3 { margin-top: 0; font-size: 1.4rem; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; }
+    
+    /* INPUTS */
+    label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #666; margin-top: 15px; display: block; letter-spacing: 0.5px; }
+    input, select, textarea { width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 12px; margin-top: 5px; font-size: 14px; transition: 0.2s; }
+    input:focus, select:focus, textarea:focus { border-color: var(--g); background: #fff; }
+    .size-row { display: flex; gap: 10px; align-items: center; }
+    .size-row input { text-align: center; }
+    
+    /* BOX LINE ITEM */
+    .box-line { background: #fff; border: 1px solid #e0e0e0; border-radius: 15px; padding: 15px; margin-bottom: 15px; position: relative; }
+    .remove-btn { color: var(--err); font-size: 10px; text-decoration: underline; cursor: pointer; position: absolute; top: 10px; right: 15px; border: none; background: none; }
+
+    /* CANVAS */
+    #canvasBox { background: #222; border-radius: 15px; margin-bottom: 20px; height: 200px; width: 100%; display: flex; justify-content: center; align-items: center; }
+    canvas { width: 100%; height: 100%; }
+
+    /* BUTTONS */
+    .btn { background: var(--g); color: var(--w); padding: 16px; border: none; border-radius: 50px; font-weight: 700; cursor: pointer; width: 100%; font-size: 16px; margin-top: 20px; transition: transform 0.1s; }
+    .btn:active { transform: scale(0.98); }
+    .btn-secondary { background: var(--b); margin-top: 10px; font-size: 14px; padding: 12px; }
+    .btn-outline { background: transparent; border: 2px solid var(--b); color: var(--b); margin-top: 10px; }
+
+    /* PRICE DISPLAY */
+    .price-display-container { background: var(--y); padding: 20px; border-radius: 20px; margin-top: 30px; text-align: center; border: 3px solid var(--b); }
+    .price-value { font-size: 2.5rem; font-weight: 800; line-height: 1; }
+    .price-sub { font-size: 12px; font-weight: 700; opacity: 0.8; margin-top: 5px; }
+
+    /* SUMMARY VIEW */
+    .summary-box { background: #fff; padding: 20px; border-radius: 15px; border: 1px dashed #aaa; margin-bottom: 20px; font-size: 14px; }
+    .summary-row { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 8px 0; }
+    .summary-row:last-child { border-bottom: none; }
+
+    footer { text-align: center; font-size: 11px; color: #aaa; padding: 40px 20px; }
+  </style>
+</head>
+<body>
+
+<div class="promo-bar">🚀 PHASE 1 – HK & KOWLOON FREE SHIPPING</div>
+<nav>
+  <div class="logo">ARK_PAK<span>_</span></div>
+  <span class="phase-badge">PHASE 1</span>
+</nav>
+
+<section class="hero">
+  <h2>Japanese Quality Archival Housing<br>Crafted in HK</h2>
+  <div class="hero-visual" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+    <div style="text-align:center">
+      <span style="font-size:40px">📦</span><br>
+      <span style="font-size:12px; font-weight:700; color:#666">PROTECT YOUR ASSETS</span>
+    </div>
+  </div>
+</section>
+
+<div class="trust-line">
+  <div>🍄 ANTI-MOLD<b>Archival</b></div>
+  <div>💧 WATER RES.<b>High Density</b></div>
+  <div>♻️ RECYCLE<b>100% Eco</b></div>
+  <div>🚚 HK DELIVERY<b>PHASE 1 FREE</b></div>
+</div>
+
+<div class="config-card" id="orderForm">
+
+  <div class="step-form fade-in" id="step1">
+    <h3>01 Logistics</h3>
+    
+    <label>Contact Name</label>
+    <input id="cName" type="text" placeholder="Your Name">
+    
+    <label>WhatsApp Number</label>
+    <input id="cTel" type="tel" placeholder="+852 1234 5678">
+    
+    <label>Delivery Address</label>
+    <input id="cAddr" type="text" placeholder="Start typing address..." autocomplete="off">
+    
+    <label>Region (Phase 1 – Free Delivery)</label>
+    <select id="hkRegion">
+      <option value="Kowloon & HK Island">Kowloon & HK Island (Free)</option>
+      <option value="New Territories">New Territories (+$150)</option>
+      <option value="Remote Islands">Remote Islands (Quote)</option>
+    </select>
+    
+    <label>Delivery Notes</label>
+    <textarea id="delNote" rows="2" placeholder="Stairs, concierge, gate code..."></textarea>
+    
+    <button class="btn" onclick="validateStep1()">Next: Box Specs</button>
+  </div>
+
+  <div class="step-form hidden fade-in" id="step2">
+    <h3>02 Box Specs</h3>
+    
+    <div id="canvasBox">
+        <canvas id="boxCanvas"></canvas>
+    </div>
+    <div style="text-align:center; font-size:10px; color:#666; margin-bottom:15px;">*Visualization based on first box dimensions</div>
+
+    <label>Box Style</label>
+    <select id="boxStyle" onchange="calcPrice()">
+      <option value="Slide Box">Slide Box (Standard)</option>
+      <option value="Cover Box">Cover Box (Lift Off)</option>
+      <option value="Slide + Cover">Slide + Cover (Double Protection)</option>
+    </select>
+
+    <label>Wall Thickness</label>
+    <select id="thickness" onchange="calcPrice()">
+      <option value="1">1 Layer (Standard Rigid)</option>
+      <option value="1.2">2 Layers (Extra Rigid +20%)</option>
+      <option value="custom">3+ Layers (Custom Quote)</option>
+    </select>
+
+    <label>Inner Fitting</label>
+    <select id="fitOption" onchange="calcPrice()">
+      <option value="standard">Standard (Foam corners)</option>
+      <option value="ukon">Ukon Bag (Snug fit +$85)</option>
+    </select>
+
+    <hr style="border:0; border-top:1px dashed #ccc; margin:20px 0;">
+
+    <div id="boxesContainer">
+      <div class="box-line" id="box_0">
+        <label style="margin-top:0">Artwork Dimensions (cm)</label>
+        <div class="size-row">
+          <div><input type="number" class="dim-w" placeholder="W" value="50" oninput="updateCanvas(); calcPrice()"></div>
+          <div style="padding-top:10px">×</div>
+          <div><input type="number" class="dim-h" placeholder="H" value="40" oninput="updateCanvas(); calcPrice()"></div>
+          <div style="padding-top:10px">×</div>
+          <div><input type="number" class="dim-d" placeholder="D" value="5" oninput="updateCanvas(); calcPrice()"></div>
+        </div>
+        
+        <label>Quantity</label>
+        <input type="number" class="dim-q" value="1" min="1" oninput="calcPrice()">
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-outline" onclick="addBox()">+ Add another size</button>
+
+    <div class="price-display-container">
+      <div class="price-value" id="totalDisplay">$0</div>
+      <div class="price-sub" id="breakdownDisplay">Calculating...</div>
+    </div>
+
+    <button class="btn" onclick="goToStep(3)">Review Quote</button>
+    <button class="btn btn-secondary" onclick="goToStep(1)">← Back to Logistics</button>
+  </div>
+
+  <div class="step-form hidden fade-in" id="step3">
+    <h3>03 Review Quote</h3>
+    
+    <div id="summary" class="summary-box">
+      </div>
+    
+    <div class="price-display-container">
+        <div class="price-value" id="finalTotal">$0</div>
+        <div class="price-sub">Payable via PayMe / Bank Transfer</div>
+    </div>
+
+    <button class="btn" style="background:#25D366" onclick="sendOrder('whatsapp')">Confirm via WhatsApp 💬</button>
+    <button class="btn btn-secondary" onclick="sendOrder('email')">Send via Email ✉️</button>
+    <button class="btn btn-outline" onclick="goToStep(2)">← Edit Specs</button>
+  </div>
+
+</div>
+
+<footer>ARK_PAK_ STUDIO // 2026 // Hong Kong</footer>
+
+<script>
+/* =========================================
+   GLOBAL STATE & INIT
+   ========================================= */
+let boxCount = 1;
+
+// Initialize on load
+window.addEventListener('load', () => {
+    resizeCanvas();
+    updateCanvas();
+    calcPrice();
+});
+
+// Google Maps Fallback
+function initPlaces() {
+    const input = document.getElementById('cAddr');
+    if (!input) return;
+    try {
+        const autocomplete = new google.maps.places.Autocomplete(input, {
+            types: ['geocode'],
+            componentRestrictions: { country: 'hk' }
+        });
+    } catch (e) {
+        console.warn('Google Maps API not loaded or invalid key. Manual entry allowed.');
+    }
+}
+
+/* =========================================
+   NAVIGATION & VALIDATION
+   ========================================= */
+function goToStep(step) {
+    // Hide all
+    document.querySelectorAll('.step-form').forEach(el => el.classList.add('hidden'));
+    
+    // Show Target
+    const target = document.getElementById('step' + step);
+    target.classList.remove('hidden');
+
+    // Specific Actions
+    if(step === 2) {
+        setTimeout(() => { resizeCanvas(); updateCanvas(); }, 100);
+    }
+    if(step === 3) {
+        generateSummary();
+    }
+    
+    // Scroll to top of card
+    document.querySelector('.config-card').scrollIntoView({ behavior: 'smooth' });
+}
+
+function validateStep1() {
+    const name = document.getElementById('cName').value.trim();
+    const tel = document.getElementById('cTel').value.trim();
+    
+    if(!name || !tel) {
+        alert("Please enter your Name and Contact Number.");
+        return;
+    }
+    goToStep(2);
+}
+
+/* =========================================
+   LOGIC: ADD/REMOVE BOXES
+   ========================================= */
+function addBox() {
+    const container = document.getElementById('boxesContainer');
+    const id = `box_${boxCount++}`;
+    
+    const html = `
+    <div class="box-line fade-in" id="${id}">
+        <button class="remove-btn" onclick="removeBox('${id}')">REMOVE</button>
+        <label style="margin-top:0">Artwork Dimensions (cm)</label>
+        <div class="size-row">
+          <div><input type="number" class="dim-w" placeholder="W" value="30" oninput="calcPrice()"></div>
+          <div style="padding-top:10px">×</div>
+          <div><input type="number" class="dim-h" placeholder="H" value="40" oninput="calcPrice()"></div>
+          <div style="padding-top:10px">×</div>
+          <div><input type="number" class="dim-d" placeholder="D" value="5" oninput="calcPrice()"></div>
+        </div>
+        <label>Quantity</label>
+        <input type="number" class="dim-q" value="1" min="1" oninput="calcPrice()">
+    </div>
+    `;
+    
+    container.insertAdjacentHTML('beforeend', html);
+    calcPrice();
+}
+
+function removeBox(id) {
+    const el = document.getElementById(id);
+    if(el) {
+        el.remove();
+        calcPrice();
+    }
+}
+
+/* =========================================
+   LOGIC: PRICING ENGINE
+   ========================================= */
+function calcPrice() {
+    const region = document.getElementById('hkRegion').value;
+    const style = document.getElementById('boxStyle').value;
+    const thickness = document.getElementById('thickness').value;
+    const fit = document.getElementById('fitOption').value;
+
+    let grandTotal = 0;
+    let totalQty = 0;
+    
+    // 1. Calculate Items
+    const boxes = document.querySelectorAll('.box-line');
+    
+    if(thickness === 'custom') {
+        updateDisplays('Custom Quote', 'Please contact support');
+        return;
+    }
+
+    boxes.forEach(box => {
+        const w = parseFloat(box.querySelector('.dim-w').value) || 0;
+        const h = parseFloat(box.querySelector('.dim-h').value) || 0;
+        const d = parseFloat(box.querySelector('.dim-d').value) || 0;
+        const q = parseInt(box.querySelector('.dim-q').value) || 1;
+
+        if(w > 0 && h > 0) {
+            // Pricing Logic (Mock)
+            const perimeter = (w + h) * 2;
+            let basePrice = 0;
+
+            // Simple Tiered pricing based on perimeter size
+            if(perimeter < 100) basePrice = 150;      // Small
+            else if(perimeter < 200) basePrice = 280; // Medium
+            else if(perimeter < 300) basePrice = 450; // Large
+            else basePrice = 600;                     // XL
+
+            // Modifiers
+            if(style === 'Slide + Cover') basePrice *= 1.5;
+            if(thickness === '1.2') basePrice *= 1.2;
+            
+            // Fitting
+            let fitCost = 0;
+            if(fit === 'ukon') fitCost = (perimeter < 200) ? 45 : 85;
+
+            const lineTotal = (basePrice + fitCost) * q;
+            grandTotal += lineTotal;
+            totalQty += q;
+        }
+    });
+
+    // 2. Delivery Logic
+    let deliveryCost = 0;
+    if(region === 'New Territories') deliveryCost = 150;
+    if(region === 'Remote Islands') {
+        updateDisplays('Quote', 'Delivery to islands requires manual quote');
+        return;
+    }
+
+    grandTotal += deliveryCost;
+
+    // Display
+    const delText = deliveryCost === 0 ? "Free Shipping" : `+$${deliveryCost} Shipping`;
+    updateDisplays(`$${Math.round(grandTotal)}`, `${totalQty} Boxes | ${delText}`);
+}
+
+function updateDisplays(main, sub) {
+    document.getElementById('totalDisplay').innerText = main;
+    document.getElementById('breakdownDisplay').innerText = sub;
+    document.getElementById('finalTotal').innerText = main;
+}
+
+/* =========================================
+   LOGIC: CANVAS DRAWING (3D WIREFRAME)
+   ========================================= */
+function resizeCanvas() {
+    const c = document.getElementById('boxCanvas');
+    const container = document.getElementById('canvasBox');
+    c.width = container.offsetWidth;
+    c.height = container.offsetHeight;
+}
+
+function updateCanvas() {
+    // Get dims of the FIRST box only for visualization
+    const firstBox = document.querySelector('.box-line');
+    if(!firstBox) return;
+
+    const w = parseFloat(firstBox.querySelector('.dim-w').value) || 30;
+    const h = parseFloat(firstBox.querySelector('.dim-h').value) || 40;
+    const d = parseFloat(firstBox.querySelector('.dim-d').value) || 5;
+
+    const canvas = document.getElementById('boxCanvas');
+    const ctx = canvas.getContext('2d');
+    const cw = canvas.width;
+    const ch = canvas.height;
+
+    ctx.clearRect(0, 0, cw, ch);
+    
+    // Scale Logic
+    const maxDim = Math.max(w, h);
+    const scale = (Math.min(cw, ch) * 0.5) / maxDim;
+    
+    const sw = w * scale;
+    const sh = h * scale;
+    const sd = d * scale * 0.8; // Depth visual multiplier
+
+    const cx = cw / 2;
+    const cy = ch / 2;
+
+    // Isometrics offsets
+    const ox = sw / 2;
+    const oy = sh / 2;
+
+    ctx.strokeStyle = '#00a651';
+    ctx.lineWidth = 2;
+    ctx.lineJoin = 'round';
+
+    // Front Face
+    ctx.strokeRect(cx - ox, cy - oy, sw, sh);
+
+    // Back Face (Offset by Depth)
+    const bx = cx - ox + sd;
+    const by = cy - oy - sd; // Up and Right
+    
+    ctx.beginPath();
+    // Top-Right Connect
+    ctx.moveTo(cx + ox, cy - oy);
+    ctx.lineTo(cx + ox + sd, cy - oy - sd);
+    
+    // Top-Left Connect
+    ctx.moveTo(cx - ox, cy - oy);
+    ctx.lineTo(cx - ox + sd, cy - oy - sd);
+    
+    // Bottom-Right Connect
+    ctx.moveTo(cx + ox, cy + oy);
+    ctx.lineTo(cx + ox + sd, cy + oy - sd);
+
+    // Back Top
+    ctx.moveTo(cx - ox + sd, cy - oy - sd);
+    ctx.lineTo(cx + ox + sd, cy - oy - sd);
+    
+    // Back Right
+    ctx.lineTo(cx + ox + sd, cy + oy - sd);
+    ctx.stroke();
+
+    // Text Labels
+    ctx.fillStyle = '#fff';
+    ctx.font = '12px Quicksand';
+    ctx.fillText(`${w}cm`, cx, cy + oy + 15); // Width label
+    ctx.fillText(`${h}cm`, cx - ox - 35, cy); // Height label
+}
+
+/* =========================================
+   LOGIC: SUMMARY & SEND
+   ========================================= */
+function generateSummary() {
+    const style = document.getElementById('boxStyle').value;
+    const thick = document.getElementById('thickness');
+    const thickText = thick.options[thick.selectedIndex].text;
+    const name = document.getElementById('cName').value;
+    const addr = document.getElementById('cAddr').value;
+    
+    let boxListHtml = '';
+    document.querySelectorAll('.box-line').forEach((box, index) => {
+        const w = box.querySelector('.dim-w').value;
+        const h = box.querySelector('.dim-h').value;
+        const d = box.querySelector('.dim-d').value;
+        const q = box.querySelector('.dim-q').value;
+        boxListHtml += `<div class="summary-row"><span>Box #${index+1} (${w}x${h}x${d}cm)</span><span>Qty: ${q}</span></div>`;
+    });
+
+    const html = `
+        <div style="margin-bottom:15px; padding-bottom:10px; border-bottom:1px solid #eee">
+            <strong>Customer:</strong> ${name}<br>
+            <strong>Address:</strong> ${addr || 'Not provided'}
+        </div>
+        <div class="summary-row"><span>Type:</span><span>${style}</span></div>
+        <div class="summary-row"><span>Thickness:</span><span>${thickText}</span></div>
+        <br>
+        <strong>Items:</strong>
+        ${boxListHtml}
+    `;
+    
+    document.getElementById('summary').innerHTML = html;
+}
+
+function sendOrder(method) {
+    const name = document.getElementById('cName').value;
+    const tel = document.getElementById('cTel').value;
+    const addr = document.getElementById('cAddr').value;
+    const note = document.getElementById('delNote').value;
+    const total = document.getElementById('finalTotal').innerText;
+    
+    let itemsStr = '';
+    document.querySelectorAll('.box-line').forEach((box, i) => {
+        const w = box.querySelector('.dim-w').value;
+        const h = box.querySelector('.dim-h').value;
+        const d = box.querySelector('.dim-d').value;
+        const q = box.querySelector('.dim-q').value;
+        itemsStr += `Box ${i+1}: ${w}x${h}x${d}cm (Qty:${q})\n`;
+    });
+
+    const msg = `
+[NEW ORDER REQUEST - ARK_PAK]
+---------------------------
+👤 Name: ${name}
+📞 Tel: ${tel}
+📍 Addr: ${addr}
+📝 Note: ${note}
+---------------------------
+SPECS:
+${itemsStr}
+Style: ${document.getElementById('boxStyle').value}
+---------------------------
+💰 TOTAL ESTIMATE: ${total}
+`.trim();
+
+    if(method === 'whatsapp') {
+        // Use standard WhatsApp API
+        const url = `https://wa.me/85293246171?text=${encodeURIComponent(msg)}`;
+        window.open(url, '_blank');
+    } else {
+        const url = `mailto:orders@arkpak.hk?subject=New Order: ${name}&body=${encodeURIComponent(msg)}`;
+        window.location.href = url;
+    }
+}
+</script>
+</body>
+</html>
