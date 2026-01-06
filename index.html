@@ -1,108 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>ARK_PAK_ | CUSTOM ARCHIVAL HOUSING</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Google Maps address look-up (key is placeholder) -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initPlaces" async defer></script>
+<!-- =========  NEW FLOW : 01 SPECS  ========= -->
+<div class="config-card" id="step1"><!-- was step2 -->
+  <h3>01 Specs</h3>
 
-  <style>
-    :root { --g: #00a651; --b: #111; --w: #fff; --y: #ffed00; --grey: #f9f9f9; --err: #ff4444; }
-    * { box-sizing: border-box; font-family: 'Quicksand', sans-serif; outline: none; }
-    body { margin: 0; background: var(--w); color: var(--b); line-height: 1.6; padding-bottom: 50px; }
-    .hidden { display: none !important; }
-    .fade-in { animation: fadeIn .3s ease-in; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* ----  HEADER  ---- */
-    .promo-bar { background: var(--y); text-align: center; padding: 10px; font-weight: 800; letter-spacing: 1px; font-size: 14px; }
-    nav { padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; position: sticky; top: 0; background: var(--w); z-index: 100; }
-    .logo { font-weight: 700; font-size: 1.4rem; letter-spacing: -1px; } .logo span { color: var(--g); }
-    .phase-badge { background: var(--g); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
-
-    /* ----  HERO – BLANK VIDEO  ---- */
-    .hero-video { max-width: 700px; margin: 30px auto; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,.1); background: #000; display: flex; align-items: center; justify-content: center; }
-    .hero-video video { width: 100%; height: auto; display: block; }
-
-    /* ----  TRUST BADGES  ---- */
-    .trust-line { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; max-width: 900px; margin: 30px auto; padding: 0 20px; text-align: center; font-size: 11px; } .trust-line b { display: block; font-weight: 700; margin-top: 4px; color: var(--g); }
-
-    /* ----  PRODUCT ROW – SINGLE LINE  ---- */
-    .product-row { display: flex; gap: 20px; justify-content: center; flex-wrap: nowrap; margin-bottom: 30px; }
-    .prod-card { flex: 1 1 200px; max-width: 220px; border: 2px solid #ddd; border-radius: 18px; padding: 20px 10px; text-align: center; transition: .2s; }
-    .prod-img { width: 100%; height: 120px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 40px; }
-    .prod-name { font-weight: 700; font-size: 15px; letter-spacing: .5px; }
-
-    /* ----  LOGISTICS BAR  ---- */
-    .logistics-bar { max-width: 700px; margin: 0 auto 40px auto; background: var(--grey); border-radius: 20px; padding: 25px; border: 2px solid #f0f0f0; }
-    .logistics-bar h3 { margin: 0 0 15px; font-size: 1.2rem; border-bottom: 2px solid #ddd; padding-bottom: 8px; }
-    label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #666; margin-top: 15px; display: block; letter-spacing: .5px; }
-    input, select, textarea { width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 12px; margin-top: 5px; font-size: 14px; transition: .2s; }
-    input:focus, select:focus, textarea:focus { border-color: var(--g); background: #fff; }
-    .btn { background: var(--g); color: var(--w); padding: 16px; border: none; border-radius: 50px; font-weight: 700; cursor: pointer; width: 100%; font-size: 16px; margin-top: 20px; transition: transform .1s; }
-    .btn:active { transform: scale(.98); }
-
-    /* ----  FORM CARD  ---- */
-    .config-card { max-width: 700px; margin: 30px auto; background: var(--grey); border-radius: 30px; padding: 30px; border: 2px solid #f0f0f0; box-shadow: 0 5px 20px rgba(0,0,0,.05); }
-    h3 { margin-top: 0; font-size: 1.4rem; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; }
-    .size-row { display: flex; gap: 10px; align-items: center; } .size-row input { text-align: center; }
-    .box-line { background: #fff; border: 1px solid #e0e0e0; border-radius: 15px; padding: 15px; margin-bottom: 15px; position: relative; }
-    .remove-btn { color: var(--err); font-size: 10px; text-decoration: underline; cursor: pointer; position: absolute; top: 10px; right: 15px; border: none; background: none; }
-    #canvasBox { background: #222; border-radius: 15px; margin-bottom: 20px; height: 200px; width: 100%; display: flex; justify-content: center; align-items: center; }
-    canvas { width: 100%; height: 100%; }
-    .btn-secondary { background: var(--b); margin-top: 10px; font-size: 14px; padding: 12px; } .btn-outline { background: transparent; border: 2px solid var(--b); color: var(--b); margin-top: 10px; }
-    .price-display-container { background: var(--y); padding: 20px; border-radius: 20px; margin-top: 30px; text-align: center; border: 3px solid var(--b); }
-    .price-value { font-size: 2.5rem; font-weight: 800; line-height: 1; } .price-sub { font-size: 12px; font-weight: 700; opacity: .8; margin-top: 5px; }
-    .summary-box { background: #fff; padding: 20px; border-radius: 15px; border: 1px dashed #aaa; margin-bottom: 20px; font-size: 14px; } .summary-row { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 8px 0; } .summary-row:last-child { border-bottom: none; }
-  </style>
-</head>
-<body>
-
-<div class="promo-bar">🚀 PHASE 1 – HK & KOWLOON FREE SHIPPING</div>
-<nav><div class="logo">ARK_PAK<span>_</span></div><span class="phase-badge">PHASE 1</span></nav>
-
-<!-- BLANK VIDEO -->
-<div class="hero-video"><video controls muted loop poster=""><source src="" type="video/mp4">Your browser does not support the video tag.</video></div>
-
-<div class="trust-line">
-  <div>🍄 ANTI-MOULD<b>Archival</b></div> <div>💧 WATER RES.<b>High Density</b></div>
-  <div>♻️ RECYCLE<b>100% Eco</b></div> <div>🚚 HK DELIVERY<b>PHASE 1 FREE</b></div>
-</div>
-
-<!-- =========================================================
-     1.  PRODUCT SHOWCASE  (NO SELECTION – SINGLE LINE)
-========================================================= -->
-<div class="config-card" style="padding-bottom:10px">
-  <div class="product-row">
-    <div class="prod-card"><div class="prod-img"></div><div class="prod-name">COVER BOX</div><small>Classic lift-off lid</small></div>
-    <div class="prod-card"><div class="prod-img"></div><div class="prod-name">SLIDE BOX</div><small>Sleeve + inner tray</small></div>
-    <div class="prod-card"><div class="prod-img"></div><div class="prod-name">UKON BAG</div><small>Snug-fit archival pouch</small></div>
-  </div>
-</div>
-
-<!-- =========================================================
-     2.  LOGISTICS BAR  (always visible)
-========================================================= -->
-<div class="logistics-bar">
-  <h3>01 Logistics</h3>
-  <label>Contact Name</label><input id="cName" type="text" placeholder="Your Name">
-  <label>WhatsApp Number</label><input id="cTel" type="tel" placeholder="+852 1234 5678">
-  <label>Email Address</label><input id="cEmail" type="email" placeholder="you@example.com">
-  <label>Delivery Address</label><input id="cAddr" type="text" placeholder="Start typing address…" autocomplete="off">
-  <label>Region (Phase 1 – Free Delivery)</label>
-  <select id="hkRegion"><option>Kowloon & HK Island (Free)</option><option>New Territories (+$150)</option><option>Remote Islands (Quote)</option></select>
-  <label>Delivery Notes</label><textarea id="delNote" rows="2" placeholder="Stairs, concierge, gate code…"></textarea>
-  <button class="btn" onclick="nextStep(2)">Next →</button>
-</div>
-
-<!-- =========================================================
-     3.  SPECS PAGE  (hidden until called)
-========================================================= -->
-<div class="config-card hidden" id="step2">
-  <h3>02 Specs</h3>
-
-  <!-- PRODUCT TYPE TOGGLE -->
+  <!-- PRODUCT TYPE -->
   <label>Product</label>
   <select id="prodType" onchange="prodChanged()">
     <option value="cover">Cover Box</option>
@@ -110,7 +10,7 @@
     <option value="ukon">Ukon Bag</option>
   </select>
 
-  <!-- WALL THICKNESS -->
+  <!-- WALL -->
   <label>Wall Thickness</label>
   <select id="wallThick" onchange="calcPrice()">
     <option value="1">1 Layer (Standard Rigid)</option>
@@ -118,41 +18,43 @@
     <option value="custom">3+ Layers (Custom Quote)</option>
   </select>
 
-  <!-- FIT TYPE -->
+  <!-- INNER FIT -->
   <label>Inner Fit</label>
   <select id="fitType" onchange="fitTypeChanged()">
-    <option value="standard">Standard (3 cm gap for bubble-wrap)</option>
+    <option value="standard">Standard (1 – 1.5 cm on each side = one layer bubble wrap)</option>
     <option value="ukon">Ukon Bag (snug fit)</option>
     <option value="custom">Custom gap</option>
   </select>
 
-  <!-- CUSTOM GAP INPUT -->
+  <!-- CUSTOM GAP -->
   <div id="customGapBox" class="hidden">
     <label>Desired gap (cm)</label>
     <input type="number" id="customGap" value="1" min="0" step="0.1" oninput="calcPrice()">
   </div>
 
-  <label>Quantity</label><input id="qty" type="number" value="1" min="1" oninput="calcPrice()">
+  <!-- QUANTITY -->
+  <label>Quantity</label>
+  <input id="qty" type="number" value="1" min="1" oninput="calcPrice()">
 
-  <!-- DIMENSION BLOCK (BOXES ONLY)  –  NO VISUAL -->
+  <!-- DIMENSION BLOCK (boxes only) -->
   <div id="dimBlock" class="opts-box">
     <hr style="border:0;border-top:1px dashed #ccc;margin:20px 0">
     <div id="boxesContainer">
       <div class="box-line" id="box_0">
         <label style="margin-top:0">Artwork Dimensions (cm)</label>
         <div class="size-row">
-          <div><input type="number" class="dim-w" placeholder="W" value="50" oninput="calcPrice()"></div>
+          <div><input type="number" class="dim-w" placeholder="W" value="50" oninput="updateCanvas();calcPrice()"></div>
           <div style="padding-top:10px">×</div>
-          <div><input type="number" class="dim-h" placeholder="H" value="40" oninput="calcPrice()"></div>
+          <div><input type="number" class="dim-h" placeholder="H" value="40" oninput="updateCanvas();calcPrice()"></div>
           <div style="padding-top:10px">×</div>
-          <div><input type="number" class="dim-d" placeholder="D" value="5" oninput="calcPrice()"></div>
+          <div><input type="number" class="dim-d" placeholder="D" value="5" oninput="updateCanvas();calcPrice()"></div>
         </div>
       </div>
     </div>
     <button type="button" class="btn btn-outline" onclick="addBox()">+ Add another size</button>
   </div>
 
-  <!-- PRICE / CUSTOM QUOTE -->
+  <!-- PRICE -->
   <div id="priceBox" class="price-display-container">
     <div class="price-value" id="totalDisplay">$0</div>
     <div class="price-sub" id="breakdownDisplay">Calculating…</div>
@@ -163,13 +65,28 @@
     <a href="mailto:studio@arkpak.hk?subject=Custom Quote Request" class="btn" style="background:#25D366;margin-top:10px">Contact Studio ✉️</a>
   </div>
 
-  <button class="btn" onclick="nextStep(3)">Review Quote</button>
+  <button class="btn" onclick="nextStep(2)">Review Quote →</button>
+</div>
+
+<!-- =========  02 LOGISTICS  ========= -->
+<div class="config-card hidden" id="step2"><!-- was step1 -->
+  <h3>02 Logistics</h3>
+  <label>Contact Name</label><input id="cName" type="text" placeholder="Your Name">
+  <label>WhatsApp Number</label><input id="cTel" type="tel" placeholder="+852 1234 5678">
+  <label>Email Address</label><input id="cEmail" type="email" placeholder="you@example.com">
+  <label>Delivery Address</label><input id="cAddr" type="text" placeholder="Start typing address…" autocomplete="off">
+  <label>Region (Phase 1 – Free Delivery)</label>
+  <select id="hkRegion" onchange="calcPrice()">
+    <option>Kowloon & HK Island (Free)</option>
+    <option>New Territories (+$150)</option>
+    <option>Remote Islands (Quote)</option>
+  </select>
+  <label>Delivery Notes</label><textarea id="delNote" rows="2" placeholder="Stairs, concierge, gate code…"></textarea>
+  <button class="btn" onclick="nextStep(3)">Next →</button>
   <button class="btn btn-secondary" onclick="prevStep(1)">← Back</button>
 </div>
 
-<!-- =========================================================
-     4.  REVIEW PAGE  (hidden until called)
-========================================================= -->
+<!-- =========  03 REVIEW  ========= -->
 <div class="config-card hidden" id="step3">
   <h3>03 Review Quote</h3>
   <div id="summary" class="summary-box"></div>
@@ -185,250 +102,24 @@
 <footer>ARK_PAK_ STUDIO // 2026 // Hong Kong</footer>
 
 <script>
-/* ----------  GLOBAL STATE  ---------- */
-let activeProduct = 'cover', boxCount = 1;
-
-/* ----------  STEP NAVIGATION  ---------- */
-function nextStep(step) {
-  // validate logistics on first transition
-  if (step === 2) {
-    if (!document.getElementById('cName').value.trim() || !document.getElementById('cTel').value.trim()) {
-      alert('Please enter Name and WhatsApp number'); return;
-    }
+/* ----------  NAVIGATION (fixed scroll targets)  ---------- */
+function nextStep(n){
+  // validate only if coming from logistics (step2)
+  if(n===3 && (!document.getElementById('cName').value.trim() || !document.getElementById('cTel').value.trim())){
+    alert('Please enter Name and WhatsApp number'); return;
   }
-  document.querySelectorAll('.step-form').forEach(el => el.classList.add('hidden'));
-  document.getElementById('step' + step).classList.remove('hidden');
-  if (step === 2) { setTimeout(() => { resizeCanvas(); updateCanvas(); }, 100); }
-  if (step === 3) generateSummary();
-  document.querySelector('.config-card').scrollIntoView({ behavior: 'smooth' });
+  document.querySelectorAll('.config-card').forEach(c=>c.classList.add('hidden'));
+  document.getElementById('step'+n).classList.remove('hidden');
+  document.getElementById('step'+n).scrollIntoView({behavior:'smooth', block:'start'});
+  if(n===3){ generateSummary(); document.getElementById('finalTotal').textContent = document.getElementById('totalDisplay').textContent; }
 }
-function prevStep(step) {
-  document.querySelectorAll('.step-form').forEach(el => el.classList.add('hidden'));
-  document.getElementById('step' + step).classList.remove('hidden');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-/* ----------  PRODUCT CHANGED  ---------- */
-function prodChanged() {
-  activeProduct = document.getElementById('prodType').value;
-  const isBox = activeProduct !== 'ukon';
-  document.getElementById('canvasBox').classList.toggle('hidden', !isBox);
-  document.getElementById('canvasCaption').classList.toggle('hidden', !isBox);
-  document.getElementById('dimBlock').classList.toggle('hidden', !isBox);
-  calcPrice(); updateCanvas();
+function prevStep(n){
+  document.querySelectorAll('.config-card').forEach(c=>c.classList.add('hidden'));
+  document.getElementById('step'+n).classList.remove('hidden');
+  document.getElementById('step'+n).scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-/* ----------  FIT TYPE CHANGED  ---------- */
-function fitTypeChanged() {
-    const ft = document.getElementById('fitType').value;
-    document.getElementById('customGapBox').classList.toggle('hidden', ft !== 'custom');
-    calcPrice();
-}
-
-/* ----------  ADD / REMOVE BOX  ---------- */
-function addBox() {
-    const container = document.getElementById('boxesContainer');
-    const id = `box_${boxCount++}`;
-    container.insertAdjacentHTML('beforeend', `
-        <div class="box-line fade-in" id="${id}">
-            <button class="remove-btn" onclick="removeBox('${id}')">REMOVE</button>
-            <label style="margin-top:0">Artwork Dimensions (cm)</label>
-            <div class="size-row">
-                <div><input type="number" class="dim-w" placeholder="W" value="30" oninput="updateCanvas();calcPrice()"></div>
-                <div style="padding-top:10px">×</div>
-                <div><input type="number" class="dim-h" placeholder="H" value="40" oninput="updateCanvas();calcPrice()"></div>
-                <div style="padding-top:10px">×</div>
-                <div><input type="number" class="dim-d" placeholder="D" value="5" oninput="updateCanvas();calcPrice()"></div>
-            </div>
-        </div>`);
-    calcPrice();
-}
-function removeBox(id) { const el = document.getElementById(id); if (el) { el.remove(); calcPrice(); } }
-
-/* ----------  PRICING ENGINE  ---------- */
-function calcPrice() {
-    const wall = document.getElementById('wallThick').value;
-    const fit = document.getElementById('fitType').value;
-    const qty = parseInt(document.getElementById('qty').value) || 1;
-    const region = document.getElementById('hkRegion').value;
-    let itemTotal = 0;
-
-    if (wall === 'custom') {
-        document.getElementById('priceBox').classList.add('hidden');
-        document.getElementById('customQuoteBox').classList.remove('hidden');
-        return;
-    }
-    document.getElementById('priceBox').classList.remove('hidden');
-    document.getElementById('customQuoteBox').classList.add('hidden');
-
-    if (activeProduct === 'ukon') {
-        const size = activeProduct; // A4/A3/A2
-        const unitPrice = { A4: 85, A3: 120, A2: 180 }[size];
-        itemTotal = unitPrice * qty;
-    } else {
-        let fitCost = 0;
-        if (fit === 'ukon') fitCost = 85;
-        if (fit === 'custom') {
-            const gap = parseFloat(document.getElementById('customGap').value) || 0;
-            fitCost = gap * 10; // £10 per cm (mock)
-        }
-        document.querySelectorAll('.box-line').forEach(box => {
-            const w = parseFloat(box.querySelector('.dim-w').value) || 0;
-            const h = parseFloat(box.querySelector('.dim-h').value) || 0;
-            const d = parseFloat(box.querySelector('.dim-d').value) || 0;
-            if (w > 0 && h > 0) {
-                const per = (w + h) * 2; let base = 0;
-                if (per < 100) base = 150; else if (per < 200) base = 280; else if (per < 300) base = 450; else base = 600;
-                if (activeProduct === 'slide') base *= 1.1;
-                if (wall === '1.2') base *= 1.2;
-                itemTotal += (base + fitCost);
-            }
-        });
-        itemTotal *= qty;
-    }
-
-    let delivery = 0;
-    if (region === 'New Territories') delivery = 150;
-    if (region === 'Remote Islands') {
-        document.getElementById('priceBox').classList.add('hidden');
-        document.getElementById('customQuoteBox').classList.remove('hidden');
-        return;
-    }
-    const grand = itemTotal + delivery;
-    const delText = delivery === 0 ? 'Free Shipping' : `+$${delivery} Shipping`;
-    document.getElementById('totalDisplay').innerText = `$${Math.round(grand)}`;
-    document.getElementById('breakdownDisplay').innerText = `${qty} pc(s) | ${delText}`;
-}
-
-/* ----------  CANVAS – 3-D WIREFRAME  ---------- */
-function resizeCanvas() {
-    const c = document.getElementById('boxCanvas');
-    const box = document.getElementById('canvasBox');
-    c.width = box.offsetWidth; c.height = box.offsetHeight;
-}
-function updateCanvas() {
-    if (activeProduct === 'ukon') return;
-    const first = document.querySelector('.box-line');
-    if (!first) return;
-    const w = parseFloat(first.querySelector('.dim-w').value) || 30;
-    const h = parseFloat(first.querySelector('.dim-h').value) || 40;
-    const d = parseFloat(first.querySelector('.dim-d').value) || 5;
-    const c = document.getElementById('boxCanvas'), ctx = c.getContext('2d'), cw = c.width, ch = c.height;
-    ctx.clearRect(0, 0, cw, ch);
-    const maxDim = Math.max(w, h), scale = (Math.min(cw, ch) * 0.5) / maxDim;
-    const sw = w * scale, sh = h * scale, sd = d * scale * 0.8;
-    const cx = cw / 2, cy = ch / 2, ox = sw / 2, oy = sh / 2;
-    ctx.strokeStyle = '#00a651'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
-    ctx.strokeRect(cx - ox, cy - oy, sw, sh);
-    ctx.beginPath();
-    ctx.moveTo(cx + ox, cy - oy); ctx.lineTo(cx + ox + sd, cy - oy - sd);
-    ctx.moveTo(cx - ox, cy - oy); ctx.lineTo(cx - ox + sd, cy - oy - sd);
-    ctx.moveTo(cx + ox, cy + oy); ctx.lineTo(cx + ox + sd, cy + oy - sd);
-    ctx.moveTo(cx - ox + sd, cy - oy - sd); ctx.lineTo(cx + ox + sd, cy - oy - sd); ctx.lineTo(cx + ox + sd, cy + oy - sd);
-    ctx.stroke();
-    ctx.fillStyle = '#fff'; ctx.font = '12px Quicksand';
-    ctx.fillText(`${w}cm`, cx, cy + oy + 15); ctx.fillText(`${h}cm`, cx - ox - 35, cy);
-}
-
-/* ----------  SUMMARY – RECAPS EVERYTHING  ---------- */
-function generateSummary() {
-    const name = document.getElementById('cName').value;
-    const tel  = document.getElementById('cTel').value;
-    const email = document.getElementById('cEmail').value;
-    const addr = document.getElementById('cAddr').value;
-    const region = document.getElementById('hkRegion').value;
-    const note   = document.getElementById('delNote').value;
-    const qty  = document.getElementById('qty').value;
-    const total = document.getElementById('totalDisplay').innerText;
-
-    const prod = document.getElementById('prodType').value;
-    const wall = document.getElementById('wallThick').value;
-    const fit  = document.getElementById('fitType').value;
-    let gapText = '';
-    if (fit === 'standard') gapText = '3 cm (bubble-wrap)';
-    else if (fit === 'ukon') gapText = 'Snug (ukon)';
-    else gapText = document.getElementById('customGap').value + ' cm';
-
-    let items = '';
-    if (prod === 'ukon') {
-        items = `<div class="summary-row"><span>Ukon Bag</span><span>Qty: ${qty}</span></div>`;
-    } else {
-        document.querySelectorAll('.box-line').forEach((box, i) => {
-            const w = box.querySelector('.dim-w').value;
-            const h = box.querySelector('.dim-h').value;
-            const d = box.querySelector('.dim-d').value;
-            items += `<div class="summary-row"><span>Box #${i + 1} (${w}×${h}×${d} cm)</span><span>Qty: ${qty}</span></div>`;
-        });
-    }
-
-    document.getElementById('summary').innerHTML = `
-        <div style="margin-bottom:15px;padding-bottom:10px;border-bottom:1px solid #eee">
-            <strong>Customer:</strong> ${name}<br><strong>Phone:</strong> ${tel}<br><strong>Email:</strong> ${email}<br><strong>Address:</strong> ${addr}<br><strong>Region:</strong> ${region}<br><strong>Notes:</strong> ${note || 'None'}
-        </div>
-        <div class="summary-row"><span>Product:</span><span>${prod === 'ukon' ? 'Ukon Bag' : prod === 'slide' ? 'Slide Box' : 'Cover Box'}</span></div>
-        <div class="summary-row"><span>Wall Thickness:</span><span>${wall === '1.2' ? '2 Layers (+20%)' : wall === 'custom' ? 'Custom Quote' : '1 Layer (Std)'}</span></div>
-        <div class="summary-row"><span>Inner Fit:</span><span>${gapText}</span></div>
-        ${items}`;
-}
-
-/* ----------  SEND ORDER (WhatsApp 55962339 + e-mail)  ---------- */
-function sendOrder(method) {
-    const name = document.getElementById('cName').value;
-    const tel  = document.getElementById('cTel').value;
-    const email = document.getElementById('cEmail').value;
-    const addr = document.getElementById('cAddr').value;
-    const region = document.getElementById('hkRegion').value;
-    const note   = document.getElementById('delNote').value;
-    const total  = document.getElementById('totalDisplay').innerText;
-
-    const prod = document.getElementById('prodType').value;
-    const wall = document.getElementById('wallThick').value;
-    const fit  = document.getElementById('fitType').value;
-    let gapText = '';
-    if (fit === 'standard') gapText = '3 cm (bubble-wrap)';
-    else if (fit === 'ukon') gapText = 'Snug (ukon)';
-    else gapText = document.getElementById('customGap').value + ' cm';
-
-    let items = '';
-    if (prod === 'ukon') {
-        items = `Ukon Bag (Qty:${document.getElementById('qty').value})\n`;
-    } else {
-        document.querySelectorAll('.box-line').forEach((box, i) => {
-            const w = box.querySelector('.dim-w').value;
-            const h = box.querySelector('.dim-h').value;
-            const d = box.querySelector('.dim-d').value;
-            items += `Box ${i + 1}: ${w}×${h}×${d}cm (Qty:${document.getElementById('qty').value})\n`;
-        });
-    }
-
-    const msg = `[NEW ORDER – ARK_PAK]
----------------------
-👤 Name: ${name}
-📞 Tel: ${tel}
-✉️ Email: ${email}
-📍 Address: ${addr}
-🌍 Region: ${region}
-📝 Note: ${note || 'None'}
----------------------
-PRODUCT: ${prod === 'ukon' ? 'Ukon Bag' : prod === 'slide' ? 'Slide Box' : 'Cover Box'}
-Wall: ${wall === '1.2' ? '2 Layers (+20%)' : wall === 'custom' ? 'Custom Quote' : '1 Layer (Std)'}
-Fit: ${gapText}
-${items}---------------------
-💰 TOTAL: ${total}`.trim();
-    if (method === 'whatsapp') window.open(`https://wa.me/55962339?text=${encodeURIComponent(msg)}`, '_blank');
-    else window.location.href = `mailto:${email}?subject=New Order: ${name}&body=${encodeURIComponent(msg)}`;
-}
-
-/* ----------  GOOGLE MAPS FALLBACK  ---------- */
-function initPlaces() {
-    const input = document.getElementById('cAddr');
-    if (!input) return;
-    try { new google.maps.places.Autocomplete(input, { types: ['geocode'], componentRestrictions: { country: 'hk' } }); }
-    catch (e) { console.warn('Maps API not ready – manual entry allowed'); }
-}
-
-/* ----------  INITIALISE  ---------- */
-window.addEventListener('load', () => { prodChanged(); calcPrice(); });
+/* ----------  KEEP YOUR EXISTING HELPERS  ---------- */
+/*  prodChanged / fitTypeChanged / addBox / removeBox / calcPrice / updateCanvas / generateSummary / sendOrder / initPlaces  */
+/*  (no changes needed inside them)  */
 </script>
-</body>
-</html>
