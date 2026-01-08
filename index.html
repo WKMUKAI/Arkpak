@@ -52,7 +52,7 @@
     .size-row { display: flex; gap: 10px; align-items: center; } .size-row input { text-align: center; }
     .box-line { background: #fff; border: 1px solid #e0e0e0; border-radius: 15px; padding: 15px; margin-bottom: 15px; position: relative; }
     .remove-btn { color: var(--err); font-size: 10px; text-decoration: underline; cursor: pointer; position: absolute; top: 10px; right: 15px; border: none; background: none; }
-    #canvasBox { background: #222; border-radius: 15px; margin-bottom: 20px; height: 200px; width: 100%; display: flex; justify-content: center; align-items: center; }
+    #canvasBox { background: #f5f7fa; border: 1px solid #ddd; border-radius: 15px; margin-bottom: 20px; height: 250px; width: 100%; display: flex; justify-content: center; align-items: center; }
     canvas { width: 100%; height: 100%; }
     .price-display-container { background: var(--y); padding: 20px; border-radius: 20px; margin-top: 30px; text-align: center; border: 3px solid var(--b); }
     .price-value { font-size: 2.5rem; font-weight: 800; line-height: 1; } .price-sub { font-size: 12px; font-weight: 700; opacity: .8; margin-top: 5px; }
@@ -66,7 +66,7 @@
 <body>
 
   <!-- PROMO BAR -->
-  <div class="promo-bar">🚚 HK DELIVERY – PHASE 1 FREE shipping to HK & Kowloon.</div>
+  <div class="promo-bar">🚚 HK DELIVERY – Phase 1 Free delivery to HK and Kowloon.</div>
 
   <!-- NAV -->
   <nav>
@@ -154,18 +154,52 @@
     </div>
   </section>
 
-  <!-- ORDER -->
+  <!-- ORDER ––  NEW VISUAL GAP SYSTEM  -->
   <section id="order-page" class="fade-in">
     <div class="container">
       <div class="config-card" id="step1">
-        <h3>01 Specs</h3>
-        <label>Product</label>
+        <h3>01 Specs & Inner Fit</h3>
+
+        <!-- VISUAL GAP CANVAS (your new system) -->
+        <div id="canvasBox">
+          <canvas id="boxCanvas"></canvas>
+        </div>
+
+        <!-- BOX-TYPE PREVIEW IMAGE -->
+        <div style="text-align:center; margin:15px 0;">
+          <img id="boxTypeImage" src="https://via.placeholder.com/300x150?text=Cover+Box" alt="Box preview" style="max-width:100%;height:auto;border-radius:12px;">
+        </div>
+
+        <label>Product Type</label>
         <select id="prodType" onchange="prodChanged()">
           <option value="cover">Cover Box</option>
           <option value="slide">Slide Box</option>
           <option value="ukon">Ukon Bag</option>
         </select>
 
+        <label>Inner Fit (Determine Gap)</label>
+        <select id="fitType" onchange="fitTypeChanged()">
+          <option value="standard">Standard (1.5 cm Gap for Bubble Wrap)</option>
+          <option value="ukon">Ukon Snug (0 cm Gap)</option>
+          <option value="custom">Custom Gap</option>
+        </select>
+
+        <div id="customGapBox" class="hidden">
+          <label>Custom Gap (cm)</label>
+          <input type="number" id="customGap" value="1.5" step="0.5" min="0" max="10" oninput="updateCanvas();calcPrice()">
+        </div>
+
+        <!-- DIMENSIONS + 120 cm CLAMP -->
+        <label>Artwork Dimensions (cm) <small style="color:var(--err);font-weight:600;">MAX 120</small></label>
+        <div class="size-row">
+          <div><input type="number" id="dimW" value="50" max="120" oninput="clamp120(this);updateCanvas();calcPrice()" placeholder="W"></div>
+          <div style="padding-top:10px">×</div>
+          <div><input type="number" id="dimH" value="40" max="120" oninput="clamp120(this);updateCanvas();calcPrice()" placeholder="H"></div>
+          <div style="padding-top:10px">×</div>
+          <div><input type="number" id="dimD" value="5" max="120" oninput="clamp120(this);calcPrice()" placeholder="D"></div>
+        </div>
+
+        <!-- WALL THICKNESS (moved out of black block) -->
         <label>Wall Thickness</label>
         <select id="wallThick" onchange="calcPrice()">
           <option value="1">1 Layer (Standard Rigid)</option>
@@ -173,49 +207,13 @@
           <option value="custom">3+ Layers (Custom Quote)</option>
         </select>
 
-        <label>Inner Fit</label>
-        <select id="fitType" onchange="fitTypeChanged()">
-          <option value="standard">Standard 1~1.5 cm gap (Bubble Wrap)</option>
-          <option value="ukon">Ukon Bag (Snug Fit)</option>
-          <option value="custom">Custom gap</option>
-        </select>
+        <!-- QUANTITY + ADD BOX -->
+        <label>Quantity for next size</label>
+        <input id="qty" type="number" value="1" min="1" oninput="calcPrice()">
+        <button type="button" class="btn btn-outline" onclick="addBox()">+ Add another size</button>
 
-        <div id="customGapBox" class="hidden">
-          <label>Desired gap (cm)</label>
-          <input type="number" id="customGap" value="1" min="0" step="0.1" oninput="calcPrice()">
-        </div>
-
-        <div id="dimBlock" class="opts-box">
-          <hr style="border:0;border-top:1px dashed #ccc;margin:20px 0">
-          <div id="canvasBox"><canvas id="boxCanvas"></canvas></div>
-          
-          <div id="boxesContainer">
-            <!-- FIRST BOX – WITH PER-LINE TYPE SELECTOR -->
-            <div class="box-line" id="box_0">
-              <label style="margin-top:0">Box Type</label>
-              <select class="lineBoxType" onchange="calcPrice();updateCanvas()">
-                <option value="cover">Cover Box</option>
-                <option value="slide">Slide Box</option>
-                <option value="slide+cover">Slide + Cover</option>
-              </select>
-
-              <label>Artwork Dimensions (cm)</label>
-              <div class="size-row">
-                <div><input type="number" class="dim-w" placeholder="W" value="50" oninput="updateCanvas();calcPrice()"></div>
-                <div style="padding-top:10px">×</div>
-                <div><input type="number" class="dim-h" placeholder="H" value="40" oninput="updateCanvas();calcPrice()"></div>
-                <div style="padding-top:10px">×</div>
-                <div><input type="number" class="dim-d" placeholder="D" value="5" oninput="updateCanvas();calcPrice()"></div>
-              </div>
-            </div>
-          </div>
-
-          <label>Quantity for next size</label>
-          <input id="qty" type="number" value="1" min="1" oninput="calcPrice()">
-          <button type="button" class="btn btn-outline" onclick="addBox()">+ Add another size</button>
-        </div>
-
-        <div id="priceBox" class="price-display-container">
+        <!-- LIVE PRICE -->
+        <div class="price-display-container">
           <div class="price-value" id="totalDisplay">$0</div>
           <div class="price-sub" id="breakdownDisplay">Calculating…</div>
         </div>
@@ -227,6 +225,7 @@
         <button class="btn" onclick="calcNextStep(2)">Next Logistics →</button>
       </div>
 
+      <!-- STEP 2 – LOGISTICS -->
       <div class="config-card hidden" id="step2">
         <h3>02 Logistics</h3>
         <label>Contact Name</label><input id="cName" type="text" placeholder="Your Name">
@@ -235,7 +234,7 @@
         <label>Delivery Address</label><input id="cAddr" type="text" placeholder="Start typing address…" autocomplete="off">
         <label>Region (Phase 1 – Free Delivery)</label>
         <select id="hkRegion" onchange="calcPrice()">
-          <option>Kowloon & HK Island (Free)</option>
+          <option>HK and Kowloon (Free)</option>
           <option>New Territories (+$150)</option>
           <option>Remote Islands (Quote)</option>
         </select>
@@ -244,6 +243,7 @@
         <button class="btn btn-secondary" onclick="calcPrevStep(1)">← Back</button>
       </div>
 
+      <!-- STEP 3 – REVIEW & SEND -->
       <div class="config-card hidden" id="step3">
         <h3>03 Review Quote</h3>
         <div id="summary" class="summary-box"></div>
@@ -286,10 +286,10 @@
   <footer>ARK_PAK_ STUDIO // 2026 // HONG KONG</footer>
 
   <script>
-    /* ----------  EMAILJS INITIALISE  ---------- */
-    emailjs.init("YOUR_PUBLIC_KEY"); // <--- replace with your EmailJS public key
+    /* ----------  EMAILJS  ---------- */
+    emailjs.init("YOUR_PUBLIC_KEY");
 
-    /* ----------  SITE NAVIGATION  ---------- */
+    /* ----------  NAVIGATION  ---------- */
     function switchPage(pageName) {
       document.querySelectorAll('section').forEach(el => el.classList.remove('active-section'));
       document.getElementById(pageName + '-page').classList.add('active-section');
@@ -326,12 +326,16 @@
       const isBox = activeProduct !== 'ukon';
       document.getElementById('canvasBox').classList.toggle('hidden', !isBox);
       document.getElementById('dimBlock').classList.toggle('hidden', !isBox);
+      // update main preview image
+      document.getElementById('boxTypeImage').src = boxImageMap(activeProduct);
       calcPrice(); updateCanvas();
     }
-    function fitTypeChanged(){
-      const ft = document.getElementById('fitType').value;
-      document.getElementById('customGapBox').classList.toggle('hidden', ft !== 'custom');
-      calcPrice();
+
+    /* ----------  BOX PREVIEW IMAGES  ---------- */
+    function boxImageMap(type){
+      // REPLACE WITH YOUR OWN URLS
+      if(type==='slide') return 'https://via.placeholder.com/300x150?text=Slide+Box';
+      return 'https://via.placeholder.com/300x150?text=Cover+Box'; // default
     }
 
     /* ----------  ADD / REMOVE BOX  ---------- */
@@ -344,31 +348,93 @@
           <button class="remove-btn" onclick="removeBox('${id}')">REMOVE</button>
 
           <label style="margin-top:0">Box Type</label>
-          <select class="lineBoxType" onchange="calcPrice();updateCanvas()">
+          <select class="lineBoxType" onchange="calcPrice();updateCanvas();updateLineImage(this)">
             <option value="cover">Cover Box</option>
             <option value="slide">Slide Box</option>
-            <option value="slide+cover">Slide + Cover</option>
           </select>
+          <!-- LIVE IMAGE FOR THIS LINE -->
+          <div class="line-img-box" style="text-align:center;margin:10px 0;">
+            <img class="lineBoxImg" src="https://via.placeholder.com/280x120?text=Cover+Box" alt="Line preview" style="max-width:100%;height:auto;border-radius:8px;">
+          </div>
 
-          <label>Artwork Dimensions (cm)</label>
+          <label>Artwork Dimensions (cm) <small style="color:var(--err);font-weight:600;">MAX 120</small></label>
           <div class="size-row">
-            <div><input type="number" class="dim-w" placeholder="W" value="30" oninput="updateCanvas();calcPrice()"></div>
+            <div><input type="number" class="dim-w" value="50" max="120" oninput="clamp120(this);updateCanvas();calcPrice()" placeholder="W"></div>
             <div style="padding-top:10px">×</div>
-            <div><input type="number" class="dim-h" placeholder="H" value="40" oninput="updateCanvas();calcPrice()"></div>
+            <div><input type="number" class="dim-h" value="40" max="120" oninput="clamp120(this);updateCanvas();calcPrice()" placeholder="H"></div>
             <div style="padding-top:10px">×</div>
-            <div><input type="number" class="dim-d" placeholder="D" value="5" oninput="updateCanvas();calcPrice()"></div>
+            <div><input type="number" class="dim-d" value="5" max="120" oninput="clamp120(this);calcPrice()" placeholder="D"></div>
           </div>
         </div>`);
       calcPrice();
     }
     function removeBox(id){ const el=document.getElementById(id); if(el){el.remove(); calcPrice();} }
 
+    /* ----------  120 cm CLAMP  ---------- */
+    function clamp120(el){ if(el.value>120) el.value=120; }
+
+    /* ----------  UPDATE LINE IMAGE  ---------- */
+    function updateLineImage(select){
+      const img = select.parentNode.querySelector('.lineBoxImg');
+      img.src = boxImageMap(select.value);
+    }
+
+    /* ----------  OPTION SWITCH  ---------- */
+    function fitTypeChanged(){
+      const ft = document.getElementById('fitType').value;
+      document.getElementById('customGapBox').classList.toggle('hidden', ft !== 'custom');
+      updateCanvas(); calcPrice();
+    }
+
+    /* ----------  VISUAL GAP CANVAS (your new system)  ---------- */
+    function resizeCanvas(){
+      const c=document.getElementById('boxCanvas'), b=document.getElementById('canvasBox');
+      c.width=b.offsetWidth; c.height=b.offsetHeight;
+      updateCanvas();
+    }
+    function updateCanvas(){
+        const c=document.getElementById('boxCanvas'), ctx=c.getContext('2d');
+        const cw=c.width, ch=c.height;
+        ctx.clearRect(0,0,cw,ch);
+
+        // Artwork size
+        const w=parseFloat(document.getElementById('dimW').value)||30;
+        const h=parseFloat(document.getElementById('dimH').value)||30;
+
+        // Gap
+        const fit=document.getElementById('fitType').value;
+        let gap=0;
+        if(fit==='standard') gap=1.5;
+        else if(fit==='custom') gap=parseFloat(document.getElementById('customGap').value)||0;
+
+        const totalW=w+gap*2, totalH=h+gap*2;
+        const scale=(Math.min(cw,ch)*0.7)/Math.max(totalW,totalH);
+        const sw=w*scale, sh=h*scale, sg=gap*scale;
+        const cx=cw/2, cy=ch/2;
+
+        // 1. Artwork (dashed)
+        ctx.setLineDash([5,5]);
+        ctx.strokeStyle='#999'; ctx.lineWidth=2;
+        ctx.strokeRect(cx-sw/2, cy-sh/2, sw, sh);
+
+        // 2. Box (solid green)
+        ctx.setLineDash([]);
+        ctx.strokeStyle='#00a651'; ctx.lineWidth=3;
+        ctx.strokeRect(cx-(sw/2+sg), cy-(sh/2+sg), sw+sg*2, sh+sg*2);
+
+        // 3. Labels
+        ctx.fillStyle='#00a651'; ctx.font='bold 12px Quicksand';
+        ctx.fillText(`BOX: ${totalW}cm`, 20, 30);
+        ctx.fillStyle='#999';
+        ctx.fillText(`ART: ${w}cm`, 20, 50);
+        if(gap>0) ctx.fillText(`GAP: ${gap}cm`, 20, 70);
+    }
+
     /* ----------  PRICING ENGINE  ---------- */
     function calcPrice(){
-      const wall = document.getElementById('wallThick').value;
-      const fit  = document.getElementById('fitType').value;
-      const region = document.getElementById('hkRegion').value;
-      let itemTotal = 0;
+      const wall=document.getElementById('wallThick').value;
+      const region=document.getElementById('hkRegion').value;
+      let itemTotal=0;
 
       if(wall==='custom' || region==='Remote Islands (Quote)'){
         document.getElementById('priceBox').classList.add('hidden');
@@ -381,25 +447,25 @@
       if(activeProduct==='ukon'){
         const unitPrice={A4:85,A3:120,A2:180}[activeProduct]||120;
         const qty=parseInt(document.getElementById('qty').value)||1;
-        itemTotal = unitPrice * qty;
+        itemTotal=unitPrice*qty;
       }else{
         let fitCost=0;
+        const fit=document.getElementById('fitType').value;
         if(fit==='ukon') fitCost=85;
         if(fit==='custom'){
           const gap=parseFloat(document.getElementById('customGap').value)||0;
-          fitCost=gap*10;
+            fitCost=gap*10;
         }
         document.querySelectorAll('.box-line').forEach(box=>{
-          const type = box.querySelector('.lineBoxType').value;
+          const type=box.querySelector('.lineBoxType').value;
           const w=parseFloat(box.querySelector('.dim-w').value)||0;
           const h=parseFloat(box.querySelector('.dim-h').value)||0;
-          const d=parseFloat(box.querySelector('.dim-d').value)||0;
+            const d=parseFloat(box.querySelector('.dim-d').value)||0;
           const qty=parseInt(document.getElementById('qty').value)||1;
           if(w>0&&h>0){
             const per=(w+h)*2; let base=0;
             if(per<100) base=150; else if(per<200) base=280; else if(per<300) base=450; else base=600;
             if(type==='slide') base*=1.1;
-            if(type==='slide+cover') base*=1.5;
             if(wall==='1.2') base*=1.2;
             itemTotal+=(base+fitCost)*qty;
           }
@@ -411,37 +477,6 @@
       const grand=itemTotal+delivery;
       document.getElementById('totalDisplay').textContent=`$${Math.round(grand)}`;
       document.getElementById('breakdownDisplay').textContent=`${document.querySelectorAll('.box-line').length} size(s) | ${delivery===0?'Free Shipping':`+$${delivery} Shipping`}`;
-    }
-
-    /* ----------  CANVAS  ---------- */
-    function resizeCanvas(){
-      const c=document.getElementById('boxCanvas'), box=document.getElementById('canvasBox');
-      if(c && box) { c.width=box.offsetWidth; c.height=box.offsetHeight; }
-    }
-    function updateCanvas(){
-      if(activeProduct==='ukon') return;
-      const first=document.querySelector('.box-line');
-      if(!first) return;
-      const w=parseFloat(first.querySelector('.dim-w').value)||30;
-      const h=parseFloat(first.querySelector('.dim-h').value)||40;
-      const d=parseFloat(first.querySelector('.dim-d').value)||5;
-      const c=document.getElementById('boxCanvas');
-      if(!c) return;
-      const ctx=c.getContext('2d'), cw=c.width, ch=c.height;
-      ctx.clearRect(0,0,cw,ch);
-      const maxDim=Math.max(w,h), scale=(Math.min(cw,ch)*0.5)/maxDim;
-      const sw=w*scale, sh=h*scale, sd=d*scale*0.8;
-      const cx=cw/2, cy=ch/2, ox=sw/2, oy=sh/2;
-      ctx.strokeStyle='#00a651'; ctx.lineWidth=2; ctx.lineJoin='round';
-      ctx.strokeRect(cx-ox,cy-oy,sw,sh);
-      ctx.beginPath();
-      ctx.moveTo(cx+ox,cy-oy); ctx.lineTo(cx+ox+sd,cy-oy-sd);
-      ctx.moveTo(cx-ox,cy-oy); ctx.lineTo(cx-ox+sd,cy-oy-sd);
-      ctx.moveTo(cx+ox,cy+oy); ctx.lineTo(cx+ox+sd,cy+oy-sd);
-      ctx.moveTo(cx-ox+sd,cy-oy-sd); ctx.lineTo(cx+ox+sd,cy-oy-sd); ctx.lineTo(cx+ox+sd,cy+oy-sd);
-      ctx.stroke();
-      ctx.fillStyle='#fff'; ctx.font='12px Quicksand';
-      ctx.fillText(`${w}cm`,cx,cy+oy+15); ctx.fillText(`${h}cm`,cx-ox-35,cy);
     }
 
     /* ----------  SUMMARY  ---------- */
@@ -465,10 +500,10 @@
         items=`<div class="summary-row"><span>Ukon Bag</span><span>Qty: ${document.getElementById('qty').value}</span></div>`;
       }else{
         document.querySelectorAll('.box-line').forEach((box,i)=>{
-          const type = box.querySelector('.lineBoxType').value;
+          const type=box.querySelector('.lineBoxType').value;
           const w=box.querySelector('.dim-w').value;
           const h=box.querySelector('.dim-h').value;
-          const d=box.querySelector('.dim-d').value;
+            const d=box.querySelector('.dim-d').value;
           items+=`<div class="summary-row"><span>Box #${i+1} (${type}) ${w}×${h}×${d} cm</span></div>`;
         });
       }
@@ -497,7 +532,7 @@
 
       let itemList = "";
       document.querySelectorAll('.box-line').forEach((b,i)=>{
-         const type = b.querySelector('.lineBoxType').value;
+         const type=b.querySelector('.lineBoxType').value;
          const w=b.querySelector('.dim-w').value;
          const h=b.querySelector('.dim-h').value;
          const d=b.querySelector('.dim-d').value;
@@ -546,7 +581,7 @@ ${itemList}`;
       catch(e){ console.warn('Maps API not ready'); }
     }
 
-    /* ----------  BOOTSTRAP  ---------- */
+    /* ----------  BOOT  ---------- */
     window.addEventListener('load',()=>{ prodChanged(); calcPrice(); resizeCanvas(); });
   </script>
 </body>
