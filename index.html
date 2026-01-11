@@ -1,119 +1,44 @@
-import { PageType } from '../App';
+import { useState } from 'react';
+import Navigation from './components/Navigation';
+import HomePage from './components/HomePage';
+import ProductsPage from './components/ProductsPage';
+import OrderPage from './components/OrderPage';
+import ContactPage from './components/ContactPage';
 
-interface HomePageProps {
-  onNavigate: (page: PageType) => void;
-}
+export type PageType = 'home' | 'products' | 'order' | 'contact';
+export type ProductType = 'cover' | 'slide' | 'ukon';
 
-export default function HomePage({ onNavigate }: HomePageProps) {
+export default function App() {
+  const [currentPage, setCurrentPage] = useState<PageType>('home');
+  const [selectedProduct, setSelectedProduct] = useState<ProductType>('cover');
+
+  const handleSelectProduct = (product: ProductType) => {
+    setSelectedProduct(product);
+    setCurrentPage('order');
+  };
+
   return (
-    <section className="py-12 md:py-20 animate-in fade-in duration-500">
-      <div className="container max-w-6xl mx-auto px-6">
-        {/* Hero Text */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
-            Japanese Precision.<br />Handcrafted in Hong Kong.
-          </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto text-base md:text-lg">
-            ARK_PAK_ brings museum-grade archival standards to the local art scene.
-            Professional housing engineered for the pace of Hong Kong's art market.
-          </p>
-        </div>
-
-        {/* Hero Video Placeholder */}
-        <div className="max-w-4xl mx-auto mb-12">
-          <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl shadow-xl flex items-center justify-center">
-            <div className="text-center text-gray-500">
-              <div className="text-6xl mb-4">🖼</div>
-              <div className="font-semibold text-lg">HERO VIDEO / IMAGE</div>
-              <div className="text-sm mt-2 opacity-70">
-                (Professional visuals coming soon)
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Extended About Content */}
-        <div className="max-w-4xl mx-auto mb-12 space-y-6 text-gray-700 leading-relaxed">
-          <p className="text-center text-lg">
-            <strong className="text-[#00a651]">ARK_PAK_</strong> is a specialized archival housing studio based in Hong Kong, 
-            dedicated to protecting artworks with the same care and precision found in museums worldwide.
-          </p>
-          
-          <div className="grid md:grid-cols-2 gap-8 mt-8">
-            <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
-              <h3 className="text-xl font-bold mb-3 text-[#00a651]">Our Philosophy</h3>
-              <p className="text-sm">
-                We believe that proper archival housing shouldn't be a luxury reserved for institutions. 
-                Every artwork deserves professional-grade protection, whether it's being stored, transported, 
-                or prepared for a client handover. Our systems combine traditional Japanese craftsmanship 
-                with modern materials science to deliver museum-quality housing that's accessible and practical 
-                for Hong Kong's dynamic art community.
-              </p>
-            </div>
-            
-            <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
-              <h3 className="text-xl font-bold mb-3 text-[#00a651]">Why Choose Us?</h3>
-              <p className="text-sm">
-                Based in Hong Kong, we understand the unique challenges of our subtropical climate—humidity, 
-                temperature fluctuations, and space constraints. Our boxes are engineered specifically for 
-                these conditions, using acid-free, lignin-free archival board that resists mould and moisture. 
-                Whether you're a gallery preparing for Art Basel, a collector managing your collection, 
-                or an artist storing works between exhibitions, we deliver housing solutions that protect your 
-                investment for generations.
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-r from-[#00a651]/5 to-[#ffed00]/10 rounded-2xl p-8 border border-[#00a651]/20 mt-8">
-            <h3 className="text-2xl font-bold mb-4 text-center">What Makes ARK_PAK_ Different?</h3>
-            <div className="grid md:grid-cols-3 gap-6 text-sm">
-              <div>
-                <div className="font-bold text-[#00a651] mb-2">🎯 Precision Fit</div>
-                <p>Every box is made-to-order based on your exact specifications. No compromises, no "close enough."</p>
-              </div>
-              <div>
-                <div className="font-bold text-[#00a651] mb-2">⚡ Fast Turnaround</div>
-                <p>We know art moves quickly in Hong Kong. Orders are typically ready within 5-7 business days.</p>
-              </div>
-              <div>
-                <div className="font-bold text-[#00a651] mb-2">🤝 Personal Service</div>
-                <p>Direct communication with our studio. No middlemen, no automated responses—just expert guidance.</p>
-              </div>
-            </div>
-          </div>
-
-          <p className="text-center text-sm text-gray-600 italic mt-8">
-            From independent artists to major galleries, ARK_PAK_ has become the trusted choice 
-            for archival housing across Hong Kong's art community. Join us in preserving what matters.
-          </p>
-        </div>
-
-        {/* Trust Line */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-12">
-          {[
-            { icon: '🍄', title: 'ANTI-MOULD', subtitle: 'Archival' },
-            { icon: '💧', title: 'WATER RES.', subtitle: 'High Density' },
-            { icon: '♻️', title: 'RECYCLE', subtitle: 'Eco Core' },
-            { icon: '🚚', title: 'HK DELIVERY', subtitle: 'PHASE 1 FREE' },
-          ].map((item, idx) => (
-            <div key={idx} className="text-center">
-              <div className="text-3xl mb-2">{item.icon}</div>
-              <div className="text-xs font-bold text-gray-700">{item.title}</div>
-              <div className="text-sm font-bold text-[#00a651] mt-1">{item.subtitle}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* CTA Button */}
-        <div className="text-center">
-          <button
-            onClick={() => onNavigate('products')}
-            className="bg-[#00a651] text-white px-12 py-4 rounded-full font-bold text-lg hover:bg-[#008f46] transition-all hover:scale-105 shadow-lg"
-          >
-            View Products
-          </button>
-        </div>
+    <div className="min-h-screen bg-white">
+      {/* Promo Bar */}
+      <div className="bg-[#ffed00] text-center py-3 px-4 font-bold text-sm tracking-wide">
+        🚚 HK DELIVERY – Phase 1 Free delivery to HK and Kowloon.
       </div>
-    </section>
+
+      {/* Navigation */}
+      <Navigation currentPage={currentPage} onNavigate={setCurrentPage} />
+
+      {/* Page Content */}
+      <main>
+        {currentPage === 'home' && <HomePage onNavigate={setCurrentPage} />}
+        {currentPage === 'products' && <ProductsPage onSelectProduct={handleSelectProduct} />}
+        {currentPage === 'order' && <OrderPage initialProduct={selectedProduct} />}
+        {currentPage === 'contact' && <ContactPage />}
+      </main>
+
+      {/* Footer */}
+      <footer className="text-center py-10 mt-16 border-t border-gray-200 text-xs text-gray-400">
+        ARK_PAK_ STUDIO // 2026 // HONG KONG
+      </footer>
+    </div>
   );
 }
